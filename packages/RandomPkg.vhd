@@ -214,6 +214,7 @@ package RandomPkg is
     impure function RandSlv (Min, Max, Size : natural) return std_logic_vector ;
     impure function RandUnsigned (Min, Max, Size : natural) return Unsigned ;
     impure function RandSigned (Min, Max : integer; Size : natural ) return Signed ;
+    impure function RandIntegerVector (Min, Max, Size : integer) return integer_vector ;
 
     --  integer randomization with a range and exclude vector
     impure function RandInt (Min, Max : integer; Exclude: integer_vector ) return integer ;
@@ -268,6 +269,7 @@ package RandomPkg is
     impure function RandUnsigned (Max, Size : natural) return Unsigned ;
     impure function RandSigned (Size : natural) return Signed ;
     impure function RandSigned (Max : integer;  Size : natural ) return Signed ;
+    impure function RandIntegerVector (Max, Size : integer) return integer_vector ;
 
   end protected RandomPType ;
 
@@ -806,6 +808,15 @@ package body RandomPkg is
     end function RandSigned ;
 
 
+    impure function RandIntegerVector (Min, Max, Size : integer) return integer_vector is
+	variable y : integer_vector (0 to Size-1);
+    begin
+        for n in y'range loop
+             y(n) := RandInt(Min, Max);
+        end loop;
+        return y;
+    end function RandIntegerVector;
+
     --
     --  integer randomization with a range and exclude vector
     --    Distribution determined by RandomParm
@@ -1104,6 +1115,11 @@ package body RandomPkg is
       -- chose 0 to Max rather than -Max to +Max to be same as RandUnsigned, either seems logical
       return to_signed(RandInt(0, Max), Size) ;
     end function RandSigned ;
+
+    impure function RandIntegerVector (Max, Size: integer) return integer_vector is
+    begin
+      return RandIntegerVector(0, Max, Size) ;
+    end function RandIntegerVector ;
 
   end protected body RandomPType ;
 
